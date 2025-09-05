@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Academic Performance Pattern Assessment</title>
+    <style>
+        :root {
+            --bg: #F3F6F8;
+            --card-bg: #FFFFFF;
+            --text-primary: #273548;
+            --text-secondary: #556D7A;
+            --accent: #4CA1A3;
+            --accent-hover: #3B7A7A;
+            --border: #CBD5E1;
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.1);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg);
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+            color: var(--text-secondary);
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--accent) 0%, #E1F0F0 100%);
+            color: white;
+            padding: 30px;
+            border-radius: var(--radius-md);
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: white;
+            margin: 0 0 10px 0;
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        .assessment-card {
+            background: var(--card-bg);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-md);
+            padding: 30px;
+            margin: 20px 0;
+            border: 1px solid var(--border);
+        }
+
+        .question-section {
+            margin: 30px 0;
+            padding: 20px;
+            background: rgba(76, 161, 163, 0.05);
+            border-radius: var(--radius-sm);
+            border-left: 4px solid var(--accent);
+        }
+
+        .question-title {
+            color: var(--text-primary);
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .option-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .option-card {
+            background: var(--card-bg);
+            border: 2px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .option-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .option-card.selected {
+            border-color: var(--accent);
+            background: rgba(76, 161, 163, 0.1);
+        }
+
+        .option-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .option-title {
+            color: var(--text-primary);
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .option-description {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .results-section {
+            background: var(--card-bg);
+            border-radius: var(--radius-md);
+            padding: 30px;
+            margin: 30px 0;
+            border: 2px solid var(--accent);
+            display: none;
+        }
+
+        .results-section.show {
+            display: block;
+        }
+
+        .score-display {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .score-number {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .score-label {
+            color: var(--text-primary);
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .pattern-insight {
+            background: rgba(76, 161, 163, 0.1);
+            border-radius: var(--radius-sm);
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 4px solid var(--accent);
+        }
+
+        .recommendation {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .cta-section {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-hover) 100%);
+            color: white;
+            padding: 25px;
+            border-radius: var(--radius-md);
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: white;
+            color: var(--accent);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .option-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Academic performance pattern assessment</h1>
+            <p>Discover which subconscious patterns may be limiting your academic potential and learn how to transform them</p>
+        </div>
+
+        <div class="assessment-card">
+            <div class="question-section" id="question1">
+                <div class="question-title">What's your biggest academic challenge right now?</div>
+                <div class="option-grid">
+                    <div class="option-card" data-value="test-anxiety" data-score="35">
+                        <div class="option-icon">📝</div>
+                        <div class="option-title">Test anxiety</div>
+                        <div class="option-description">Mind goes blank during exams despite knowing the material</div>
+                    </div>
+                    <div class="option-card" data-value="perfectionist-paralysis" data-score="40">
+                        <div class="option-icon">⚖️</div>
+                        <div class="option-title">Perfectionist paralysis</div>
+                        <div class="option-description">Can't start or finish work because it's never good enough</div>
+                    </div>
+                    <div class="option-card" data-value="procrastination" data-score="35">
+                        <div class="option-icon">🔄</div>
+                        <div class="option-title">Procrastination patterns</div>
+                        <div class="option-description">Delay important tasks until the last possible moment</div>
+                    </div>
+                    <div class="option-card" data-value="comparison-trap" data-score="30">
+                        <div class="option-icon">👥</div>
+                        <div class="option-title">Comparison trap</div>
+                        <div class="option-description">Feel behind when seeing others' achievements</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="question-section" id="question2" style="display: none;">
+                <div class="question-title">How long have you been experiencing this pattern?</div>
+                <div class="option-grid">
+                    <div class="option-card" data-value="recent" data-score="15">
+                        <div class="option-icon">🆕</div>
+                        <div class="option-title">Recent development</div>
+                        <div class="option-description">Started within the last 6 months</div>
+                    </div>
+                    <div class="option-card" data-value="moderate" data-score="25">
+                        <div class="option-icon">📅</div>
+                        <div class="option-title">Ongoing issue</div>
+                        <div class="option-description">Present for 6 months to 2 years</div>
+                    </div>
+                    <div class="option-card" data-value="long-term" data-score="35">
+                        <div class="option-icon">⏳</div>
+                        <div class="option-title">Long-standing pattern</div>
+                        <div class="option-description">Been dealing with this for over 2 years</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="question-section" id="question3" style="display: none;">
+                <div class="question-title">How does this pattern affect your daily academic life?</div>
+                <div class="option-grid">
+                    <div class="option-card" data-value="mild" data-score="10">
+                        <div class="option-icon">🟢</div>
+                        <div class="option-title">Mild disruption</div>
+                        <div class="option-description">Noticeable but manageable impact</div>
+                    </div>
+                    <div class="option-card" data-value="significant" data-score="20">
+                        <div class="option-icon">🟡</div>
+                        <div class="option-title">Significant impact</div>
+                        <div class="option-description">Regularly affects performance and wellbeing</div>
+                    </div>
+                    <div class="option-card" data-value="severe" data-score="30">
+                        <div class="option-icon">🟠</div>
+                        <div class="option-title">Major limitation</div>
+                        <div class="option-description">Severely restricts academic potential</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="results-section" id="results">
+                <h2 style="color: var(--text-primary); text-align: center;">Your academic pattern assessment</h2>
+                
+                <div class="score-display">
+                    <div class="score-number" id="scoreNumber">0</div>
+                    <div class="score-label">Transformation readiness score</div>
+                </div>
+
+                <div class="pattern-insight" id="patternInsight">
+                    <!-- Pattern-specific insight will be inserted here -->
+                </div>
+
+                <div class="recommendation" id="recommendation">
+                    <!-- Recommendation will be inserted here -->
+                </div>
+
+                <div class="cta-section">
+                    <div style="font-size: 1.3rem; font-weight: 600; margin-bottom: 10px;">🎯 Ready to discover how hypnotherapy transforms academic patterns</div>
+                    <p>Learn about the 2-session method that rewires subconscious programming for effortless academic performance</p>
+                    
+                    <div class="cta-buttons">
+                        <a href="#" id="whatsappBtn" class="btn btn-primary">
+                            💬 Message on WhatsApp
+                        </a>
+                        <a href="https://hypnotherapy.streamlit.app" class="btn btn-secondary">
+                            🌐 Visit Website
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentQuestion = 1;
+        let answers = {};
+        let totalScore = 0;
+
+        // Pattern insights for each primary challenge
+        const patternInsights = {
+            'test-anxiety': {
+                title: 'Test anxiety pattern',
+                description: 'Your nervous system treats evaluation as physical danger. Stress hormones literally block access to your memory during tests. Hypnotherapy rewires this response so exams become opportunities to demonstrate knowledge rather than threats to survive.',
+                recommendation: 'Your pattern responds excellently to the 2-session hypnotherapy method. Most test anxiety clients experience dramatic improvement after just one session, with complete transformation typical after session two.',
+                whatsapp: 'Hi! I struggle with test anxiety and my mind goes blank during exams despite knowing the material. I\'d like to know more about your 2-session hypnotherapy method.'
+            },
+            'perfectionist-paralysis': {
+                title: 'Perfectionist paralysis pattern', 
+                description: 'Your subconscious believes "imperfect work equals worthless person." This creates impossible standards that guarantee delay and suffering. Hypnotherapy separates your worth from your performance, allowing excellence without paralyzing fear.',
+                recommendation: 'Perfectionist patterns require deeper subconscious rewiring. The 2-session method addresses the core identity beliefs driving this pattern. Most clients report feeling "free to be human" after transformation.',
+                whatsapp: 'Hi! I struggle with perfectionist paralysis that prevents me from starting or finishing academic work. I\'d like to know more about your 2-session hypnotherapy method.'
+            },
+            'procrastination': {
+                title: 'Procrastination pattern',
+                description: 'Your mind delays action to avoid potential failure, judgment, or imperfection. This protective mechanism creates more problems than it solves. Hypnotherapy addresses the underlying fears so you can take action from confidence rather than avoiding it from anxiety.',
+                recommendation: 'Procrastination patterns often resolve quickly with targeted hypnotherapy. We identify what your subconscious is protecting you from, then install new responses that support timely action.',
+                whatsapp: 'Hi! I have chronic procrastination patterns that affect my academic performance. I\'d like to know more about your 2-session hypnotherapy method.'
+            },
+            'comparison-trap': {
+                title: 'Academic comparison pattern',
+                description: 'You see others\' highlight reels and compare them to your internal struggles. This creates impossible comparisons that drain motivation. Hypnotherapy transforms others\' success into inspiration for your own unique path.',
+                recommendation: 'Comparison patterns respond well to identity-focused hypnotherapy. We help you develop intrinsic motivation and self-worth that doesn\'t depend on relative performance.',
+                whatsapp: 'Hi! I get stuck comparing myself to other students and feeling behind. I\'d like to know more about your 2-session hypnotherapy method.'
+            }
+        };
+
+        // Handle option selection
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('.option-card')) {
+                const card = e.target.closest('.option-card');
+                const questionSection = card.closest('.question-section');
+                const allCards = questionSection.querySelectorAll('.option-card');
+                
+                // Remove selected class from all cards in this question
+                allCards.forEach(c => c.classList.remove('selected'));
+                
+                // Add selected class to clicked card
+                card.classList.add('selected');
+                
+                // Store answer
+                const questionId = questionSection.id;
+                answers[questionId] = {
+                    value: card.dataset.value,
+                    score: parseInt(card.dataset.score)
+                };
+                
+                // Move to next question after brief delay
+                setTimeout(() => {
+                    moveToNextQuestion();
+                }, 500);
+            }
+        });
+
+        function moveToNextQuestion() {
+            if (currentQuestion < 3) {
+                // Hide current question
+                document.getElementById(`question${currentQuestion}`).style.display = 'none';
+                
+                // Show next question
+                currentQuestion++;
+                document.getElementById(`question${currentQuestion}`).style.display = 'block';
+            } else {
+                // All questions answered, show results
+                calculateAndShowResults();
+            }
+        }
+
+        function calculateAndShowResults() {
+            // Calculate total score
+            totalScore = 0;
+            Object.values(answers).forEach(answer => {
+                totalScore += answer.score;
+            });
+
+            // Get primary pattern from question 1
+            const primaryPattern = answers.question1.value;
+            const patternData = patternInsights[primaryPattern];
+
+            // Update results display
+            document.getElementById('scoreNumber').textContent = totalScore;
+            
+            // Show pattern insight
+            document.getElementById('patternInsight').innerHTML = `
+                <h3 style="color: var(--text-primary); margin-bottom: 10px;">${patternData.title}</h3>
+                <p>${patternData.description}</p>
+            `;
+
+            // Show recommendation based on score
+            let recommendationText = '';
+            if (totalScore >= 70) {
+                recommendationText = `<h3 style="color: var(--accent);">High transformation readiness</h3>
+                <p>Your score indicates excellent potential for rapid change through hypnotherapy. ${patternData.recommendation}</p>
+                <p><strong>Recommendation:</strong> You're ready to book the complete 2-session transformation package or start with a discovery call to learn more about the process.</p>`;
+            } else if (totalScore >= 50) {
+                recommendationText = `<h3 style="color: var(--accent);">Good transformation potential</h3>
+                <p>Your pattern shows strong indicators for successful hypnotherapy. ${patternData.recommendation}</p>
+                <p><strong>Recommendation:</strong> A discovery call would help create the perfect strategy for your specific situation and timeline.</p>`;
+            } else {
+                recommendationText = `<h3 style="color: var(--accent);">Discovery call recommended</h3>
+                <p>Your situation is unique and would benefit from personalized assessment. ${patternData.recommendation}</p>
+                <p><strong>Recommendation:</strong> A free discovery call will help determine the best approach for your specific academic challenges.</p>`;
+            }
+
+            document.getElementById('recommendation').innerHTML = recommendationText;
+
+            // Update WhatsApp button with pattern-specific message
+            const whatsappBtn = document.getElementById('whatsappBtn');
+            const encodedMessage = encodeURIComponent(patternData.whatsapp);
+            whatsappBtn.href = `https://wa.me/66642439944?text=${encodedMessage}`;
+
+            // Hide all questions and show results
+            for (let i = 1; i <= 3; i++) {
+                document.getElementById(`question${i}`).style.display = 'none';
+            }
+            document.getElementById('results').classList.add('show');
+        }
+    </script>
+</body>
+</html>
